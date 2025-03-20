@@ -3,3 +3,4 @@ Cython
 buildozer
 uiautomator2
 pyautogui
+python3
