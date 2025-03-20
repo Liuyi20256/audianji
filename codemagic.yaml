@@ -4,10 +4,17 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     scripts:
-      - name: Set Python version and install dependencies
+      - name: Check pyenv installation
         script: |
-          pyenv install -s 3.9
-          pyenv global 3.9
+          if! command -v pyenv &> /dev/null
+          then
+              echo "pyenv could not be found, trying system Python"
+          else
+              pyenv install -s 3.9
+              pyenv global 3.9
+          fi
+      - name: Install Python dependencies
+        script: |
           pip install -r requirements.txt
       - name: Install Buildozer
         script: |
