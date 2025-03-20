@@ -1,13 +1,13 @@
-﻿workflows:
+workflows:
   android-kivy-build:
     name: Android Kivy Build
     max_build_duration: 120
     instance_type: mac_mini_m2
-    environment:
-      python: 3.9
     scripts:
-      - name: Install Python dependencies
+      - name: Set Python version and install dependencies
         script: |
+          pyenv install -s 3.9
+          pyenv global 3.9
           pip install -r requirements.txt
       - name: Install Buildozer
         script: |
