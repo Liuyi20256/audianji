@@ -1,23 +1,24 @@
-workflows:
+﻿workflows:
   android-kivy-build:
     name: Android Kivy Build
     max_build_duration: 120
     instance_type: mac_mini_m2
     scripts:
       - name: Check Python environment
-        script: |
-          if command -v pyenv &> /dev/null; then
-            pyenv install -s 3.11
-            pyenv global 3.11
-          else
-            echo "pyenv not found. Using system Python."
-          fi
-          python --version
+  script: |
+    if command -v pyenv &> /dev/null; then
+      pyenv install -s 3.11
+      pyenv global 3.11
+    else
+      echo "pyenv not found. Using system Python."
+    fi
+    python --version
       - name: Install Python dependencies
         script: |
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
           fi
+          pip install setuptools
           pip install Cython
       - name: Install Buildozer
         script: |
@@ -44,3 +45,4 @@ workflows:
           fi
     artifacts:
       - bin/*.apk
+    
