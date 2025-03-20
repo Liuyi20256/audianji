@@ -12,7 +12,7 @@ source.include_exts = py,png,jpg,kv,atlas
 # 应用版本
 version = 0.1
 # 应用所需依赖
-requirements = python3,kivy,uiautomator2
+requirements = python3,kivy,uiautomator2，pyautogui，Cython，buildozer
 
 # 应用支持的屏幕方向
 orientation = portrait
