@@ -3,15 +3,12 @@ workflows:
     name: Android Kivy Build
     max_build_duration: 120
     instance_type: mac_mini_m2
-    environment:
-      vars:
-        PYTHON_VERSION: "3.9"
     scripts:
       - name: Check Python environment
         script: |
           if command -v pyenv &> /dev/null; then
-            pyenv install -s $PYTHON_VERSION
-            pyenv global $PYTHON_VERSION
+            pyenv install -s 3.12.7
+            pyenv global 3.12.7
           else
             echo "pyenv not found. Using system Python."
           fi
@@ -20,12 +17,17 @@ workflows:
         script: |
           if [ -f requirements.txt ]; then
             pip install -r requirements.txt
-          else
-            echo "requirements.txt not found. Skipping dependency installation."
           fi
+          pip install setuptools
       - name: Install Buildozer
         script: |
           pip install buildozer
+      - name: Install Android SDK and NDK
+        script: |
+          brew install android-sdk android-ndk
+          export ANDROID_HOME="/usr/local/share/android-sdk"
+          export ANDROID_NDK_HOME="/usr/local/share/android-sdk/ndk/25.1.8937393"
+          export PATH="$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
       - name: Configure Buildozer
         script: |
           if [ -f buildozer.spec ]; then
@@ -37,4 +39,4 @@ workflows:
           fi
     artifacts:
       - bin/*.apk
-    
+   
