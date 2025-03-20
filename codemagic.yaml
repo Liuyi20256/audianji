@@ -3,26 +3,38 @@ workflows:
     name: Android Kivy Build
     max_build_duration: 120
     instance_type: mac_mini_m2
+    environment:
+      vars:
+        PYTHON_VERSION: "3.9"
     scripts:
-      - name: Check pyenv installation
+      - name: Check Python environment
         script: |
-          echo "Current PATH: $PATH"
-          if! command -v pyenv &> /dev/null
-          then
-              echo "pyenv could not be found, trying system Python"
+          if command -v pyenv &> /dev/null; then
+            pyenv install -s $PYTHON_VERSION
+            pyenv global $PYTHON_VERSION
           else
-              pyenv update
-              pyenv install -s 3.9
-              pyenv global 3.9
+            echo "pyenv not found. Using system Python."
           fi
+          python --version
       - name: Install Python dependencies
         script: |
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "requirements.txt not found. Skipping dependency installation."
+          fi
       - name: Install Buildozer
         script: |
           pip install buildozer
-      - name: Build Android APK
+      - name: Configure Buildozer
         script: |
-          buildozer -v android debug
+          if [ -f buildozer.spec ]; then
+            buildozer -v android debug
+          else
+            echo "buildozer.spec not found. Creating a default one."
+            buildozer init
+            buildozer -v android debug
+          fi
     artifacts:
       - bin/*.apk
+    
