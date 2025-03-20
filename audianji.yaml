@@ -1,0 +1,19 @@
+﻿workflows:
+  android-kivy-build:
+    name: Android Kivy Build
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    environment:
+      python: 3.9
+    scripts:
+      - name: Install Python dependencies
+        script: |
+          pip install -r requirements.txt
+      - name: Install Buildozer
+        script: |
+          pip install buildozer
+      - name: Build Android APK
+        script: |
+          buildozer -v android debug
+    artifacts:
+      - bin/*.apk
